@@ -1,0 +1,37 @@
+local playfab = require "playfab_defold.playfab"
+local authentication = require "playfab.client_api.authentication"
+local LoginWithPlayFabRequest = require "playfab.client_api.datatype.LoginWithPlayFabRequest"
+
+local dirtylarry = require "dirtylarry/dirtylarry"
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	self.username = ""
+	self.password = ""
+end
+
+function final(self)
+	msg.post(".", "release_input_focus")
+end
+
+function on_input(self, action_id, action)
+	self.username = dirtylarry:input("username", action_id, action, gui.KEYBOARD_TYPE_DEFAULT, "Username...")
+	self.password = dirtylarry:input("password", action_id, action, gui.KEYBOARD_TYPE_PASSWORD, "Password...")
+	dirtylarry:button("login", action_id, action, function ()
+		msg.post("main:/spinner#spinner", "show")
+		self.username = "britzl"
+		self.password = "qwerty"
+		local request = LoginWithPlayFabRequest.create(playfab.settings.title_id, self.username, self.password)
+		authentication.LoginWithPlayFab(request, function(response, error)
+			pprint(response)
+			pprint(error)
+			msg.post("main:/spinner#spinner", "hide")
+			msg.post("main:/controller", "show_startmenu")
+		end)
+	end)
+end
+
+function on_reload(self)
+    -- Add input-handling code here
+    -- Remove this function if not needed
+end

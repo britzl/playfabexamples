@@ -1,0 +1,46 @@
+local playfab = require "playfab_defold.playfab"
+local authentication = require "playfab.client_api.authentication"
+local RegisterPlayFabUserRequest = require "playfab.client_api.datatype.RegisterPlayFabUserRequest"
+local LoginWithPlayFabRequest = require "playfab.client_api.datatype.LoginWithPlayFabRequest"
+
+local dirtylarry = require "dirtylarry/dirtylarry"
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	self.username = ""
+	self.password = ""
+	self.email = ""
+end
+
+function final(self)
+	msg.post(".", "release_input_focus")
+end
+
+function update(self, dt)
+    -- Add update code here
+    -- Remove this function if not needed
+end
+
+function on_message(self, message_id, message, sender)
+    -- Add message-handling code here
+    -- Remove this function if not needed
+end
+
+function on_input(self, action_id, action)
+	self.email = dirtylarry:input("email", action_id, action, gui.KEYBOARD_TYPE_EMAIL, "E-mail...")
+	self.username = dirtylarry:input("username", action_id, action, gui.KEYBOARD_TYPE_DEFAULT, "Username...")
+	self.password = dirtylarry:input("password", action_id, action, gui.KEYBOARD_TYPE_PASSWORD, "Password...")
+	
+	dirtylarry:button("register", action_id, action, function ()
+		local request = RegisterPlayFabUserRequest.create(playfab.settings.title_id, self.username, self.email, self.password, true, self.username)
+		authentication.RegisterPlayFabUser(request, function(response, error)
+			pprint(response)
+			pprint(error)
+		end)
+	end)
+end
+
+function on_reload(self)
+    -- Add input-handling code here
+    -- Remove this function if not needed
+end

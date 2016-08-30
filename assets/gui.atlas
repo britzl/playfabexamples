@@ -1,0 +1,9 @@
+images {
+  image: "/assets/images/green_button10.png"
+}
+images {
+  image: "/assets/images/grey_crossGrey.png"
+}
+margin: 0
+extrude_borders: 0
+inner_padding: 0

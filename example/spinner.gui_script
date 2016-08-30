@@ -1,0 +1,30 @@
+function init(self)
+	self.spinner_node = gui.get_node("spinner")
+	self.bg_node = gui.get_node("bg")
+	gui.set_enabled(self.spinner_node, true)
+	gui.set_enabled(self.bg_node, true)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("show") then
+		msg.post(".", "acquire_input_focus")
+		gui.set_render_order(15)
+		gui.set_enabled(self.spinner_node, true)
+		gui.set_enabled(self.bg_node, true)
+		gui.animate(self.spinner_node, "rotation.z", -360, gui.EASING_LINEAR, 1, 0, nil, gui.PLAYBACK_LOOP_FORWARD)
+	elseif message_id == hash("hide") then
+		msg.post(".", "release_input_focus")
+		gui.set_enabled(self.spinner_node, false)
+		gui.set_enabled(self.bg_node, false)
+		gui.cancel_animation(self.spinner_node, "rotation.z")
+	end
+end
+
+function on_input(self, action_id, action)
+	return true
+end
+
+function on_reload(self)
+    -- Add input-handling code here
+    -- Remove this function if not needed
+end

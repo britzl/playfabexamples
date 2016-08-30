@@ -1,0 +1,4 @@
+font: "/assets/font/smallest_pixel-7.ttf"
+material: "/assets/font/font.material"
+size: 9
+antialias: 0
