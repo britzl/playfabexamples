@@ -9,10 +9,17 @@ local function hide_spinner()
 	msg.post("main:/spinner#spinner", "hide")
 end
 
-local function unload(self)
+local function unload_all(self)
 	for c,_ in pairs(self.loaded_collections) do
 		self.loaded_collections[c] = nil
 		collection.unload(c)
+	end
+end
+
+local function unload(self, proxy, callback)
+	if self.loaded_collections[proxy] then
+		self.loaded_collections[proxy] = nil
+		collection.unload(proxy, callback)
 	end
 end
 
@@ -26,26 +33,42 @@ end
 
 local function show_startmenu(self)
 	show_spinner()
-	unload(self)
+	unload_all(self)
 	load(self, "#startmenu_proxy", hide_spinner)
 end
 
 local function show_login(self)
 	show_spinner()
-	unload(self)
+	unload_all(self)
 	load(self, "#login_proxy", hide_spinner)
 end
 
 local function show_register(self)
 	show_spinner()
-	unload(self)
+	unload_all(self)
 	load(self, "#register_proxy", hide_spinner)
 end
 
 local function show_game(self)
 	show_spinner()
-	unload(self)
+	unload_all(self)
 	load(self, "#game_proxy", hide_spinner)
+end
+
+local function show_popup(self, message)
+	show_spinner()
+	load(self, "#popup_proxy", function()
+		hide_spinner()
+		msg.post("popup:/popup", "show", { text = message })
+	end)
+end
+
+local function hide_popup(self, message)
+	print("hide_popup")
+	show_spinner()
+	unload(self, "#popup_proxy", function()
+		hide_spinner()
+	end)
 end
 
 
@@ -71,6 +94,10 @@ function on_message(self, message_id, message, sender)
 		show_register(self)
 	elseif message_id == hash("show_startmenu") then
 		show_startmenu(self)
+	elseif message_id == hash("show_popup") then
+		show_popup(self, message.text)
+	elseif message_id == hash("hide_popup") then
+		hide_popup(self)
 	end
 end
 

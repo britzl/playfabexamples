@@ -4,6 +4,9 @@ images {
 images {
   image: "/assets/images/grey_crossGrey.png"
 }
+images {
+  image: "/assets/images/grey_panel.png"
+}
 margin: 0
-extrude_borders: 0
+extrude_borders: 2
 inner_padding: 0

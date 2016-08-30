@@ -7,6 +7,9 @@ local dirtylarry = require "dirtylarry/dirtylarry"
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
+	gui.set_text(gui.get_node("username/content"), "britzl")
+	gui.set_text(gui.get_node("password/content"), "qwerty")
+	gui.set_text(gui.get_node("email/content"), "bjorn.ritzl@king.com")
 	self.username = ""
 	self.password = ""
 	self.email = ""
@@ -16,26 +19,29 @@ function final(self)
 	msg.post(".", "release_input_focus")
 end
 
-function update(self, dt)
-    -- Add update code here
-    -- Remove this function if not needed
-end
-
-function on_message(self, message_id, message, sender)
-    -- Add message-handling code here
-    -- Remove this function if not needed
-end
-
 function on_input(self, action_id, action)
+	if action.released and gui.pick_node(gui.get_node("back"), action.x, action.y) then
+		msg.post("main:/controller", "show_startmenu")
+		return
+	end
+
 	self.email = dirtylarry:input("email", action_id, action, gui.KEYBOARD_TYPE_EMAIL, "E-mail...")
 	self.username = dirtylarry:input("username", action_id, action, gui.KEYBOARD_TYPE_DEFAULT, "Username...")
 	self.password = dirtylarry:input("password", action_id, action, gui.KEYBOARD_TYPE_PASSWORD, "Password...")
 	
 	dirtylarry:button("register", action_id, action, function ()
+		msg.post("main:/spinner#spinner", "show")
 		local request = RegisterPlayFabUserRequest.create(playfab.settings.title_id, self.username, self.email, self.password, true, self.username)
 		authentication.RegisterPlayFabUser(request, function(response, error)
 			pprint(response)
 			pprint(error)
+			msg.post("main:/spinner#spinner", "hide")
+			if error or (response and response.errorMessage) then
+				msg.post("main:/controller", "show_popup", { text = response and response.errorMessage or "Something went wrong"})
+			else
+				msg.post("main:/controller", "show_startmenu")
+			end
+			
 		end)
 	end)
 end

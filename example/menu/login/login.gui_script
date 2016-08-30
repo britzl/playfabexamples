@@ -6,6 +6,8 @@ local dirtylarry = require "dirtylarry/dirtylarry"
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
+	gui.set_text(gui.get_node("username/content"), "britzl")
+	gui.set_text(gui.get_node("password/content"), "qwerty")
 	self.username = ""
 	self.password = ""
 end
@@ -15,6 +17,11 @@ function final(self)
 end
 
 function on_input(self, action_id, action)
+	if action.released and gui.pick_node(gui.get_node("back"), action.x, action.y) then
+		msg.post("main:/controller", "show_startmenu")
+		return
+	end
+
 	self.username = dirtylarry:input("username", action_id, action, gui.KEYBOARD_TYPE_DEFAULT, "Username...")
 	self.password = dirtylarry:input("password", action_id, action, gui.KEYBOARD_TYPE_PASSWORD, "Password...")
 	dirtylarry:button("login", action_id, action, function ()
