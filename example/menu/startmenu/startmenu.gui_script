@@ -1,12 +1,17 @@
 local playfab = require "playfab_defold.playfab"
 local dirtylarry = require "dirtylarry/dirtylarry"
+local navigate = require "example.navigate"
+
+local function is_authenticated()
+	return playfab.is_authenticated()
+end
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
-	gui.set_enabled(gui.get_node("login/larrybutton"), not playfab.is_authenticated())
-	gui.set_enabled(gui.get_node("register/larrybutton"), not playfab.is_authenticated())
-	gui.set_enabled(gui.get_node("play/larrybutton"), playfab.is_authenticated())
-	gui.set_enabled(gui.get_node("settings/larrybutton"), playfab.is_authenticated())
+	gui.set_enabled(gui.get_node("login/larrybutton"), not is_authenticated())
+	gui.set_enabled(gui.get_node("register/larrybutton"), not is_authenticated())
+	gui.set_enabled(gui.get_node("play/larrybutton"), is_authenticated())
+	gui.set_enabled(gui.get_node("settings/larrybutton"), is_authenticated())
 end
 
 function final(self)
@@ -14,21 +19,18 @@ function final(self)
 end
 
 function on_input(self, action_id, action)
-	if playfab.is_authenticated() then
-		dirtylarry:button("play", action_id, action, function ()
-			msg.post("main:/controller", "show_game")
-		end)
-		dirtylarry:button("settings", action_id, action, function ()
-			msg.post("main:/controller", "show_settings")
-		end)
-	else
-		dirtylarry:button("login", action_id, action, function ()
-			msg.post("main:/controller", "show_login")
-		end)
-		dirtylarry:button("register", action_id, action, function ()
-			msg.post("main:/controller", "show_register")
-		end)
-	end
+	dirtylarry:button("play", action_id, action, function ()
+		navigate.game()
+	end)
+	dirtylarry:button("settings", action_id, action, function ()
+		navigate.settings()
+	end)
+	dirtylarry:button("login", action_id, action, function ()
+		navigate.login()
+	end)
+	dirtylarry:button("register", action_id, action, function ()
+		navigate.register()
+	end)
 end
 
 function on_reload(self)

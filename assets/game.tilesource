@@ -4502,7 +4502,34 @@ convex_hulls {
 }
 collision_groups: "ground"
 animations {
-  id: "player_idle"
+  id: "blue_player_idle"
+  start_tile: 50
+  end_tile: 50
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "blue_player_jump"
+  start_tile: 57
+  end_tile: 58
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 10
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "blue_player_walk"
+  start_tile: 59
+  end_tile: 60
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 10
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "green_player_idle"
   start_tile: 20
   end_tile: 20
   playback: PLAYBACK_ONCE_FORWARD
@@ -4511,10 +4538,46 @@ animations {
   flip_vertical: 0
 }
 animations {
-  id: "player_walk"
+  id: "green_player_jump"
+  start_tile: 27
+  end_tile: 28
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 10
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "green_player_walk"
   start_tile: 29
   end_tile: 30
-  playback: PLAYBACK_LOOP_PINGPONG
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 10
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "pink_player_idle"
+  start_tile: 80
+  end_tile: 80
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "pink_player_jump"
+  start_tile: 87
+  end_tile: 88
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 10
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "pink_player_walk"
+  start_tile: 89
+  end_tile: 90
+  playback: PLAYBACK_LOOP_FORWARD
   fps: 10
   flip_horizontal: 0
   flip_vertical: 0

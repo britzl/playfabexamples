@@ -1,3 +1,5 @@
+local navigate = require "example.navigate"
+
 function init(self)
 	msg.post(".", "acquire_input_focus")
 	self.bg = gui.get_node("bg")
@@ -9,11 +11,6 @@ function final(self)
 	msg.post(".", "release_input_focus")
 end
 
-function update(self, dt)
-    -- Add update code here
-    -- Remove this function if not needed
-end
-
 function on_message(self, message_id, message, sender)
 	if message_id == hash("show") then
 		gui.set_text(self.text, message.text or "")
@@ -22,7 +19,7 @@ end
 
 function on_input(self, action_id, action)
 	if action.released then
-		msg.post("main:/controller", "hide_popup")
+		navigate.hide_popup()
 	end
 end
 

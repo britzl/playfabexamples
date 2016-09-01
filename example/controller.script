@@ -1,5 +1,8 @@
 local playfab = require "playfab_defold.playfab"
+local util = require "example.playfab.util"
 local collection = require "ludobits.m.collection"
+
+
 
 local function show_spinner()
 	msg.post("main:/spinner#spinner", "show")
@@ -49,6 +52,12 @@ local function show_register(self)
 	load(self, "#register_proxy", hide_spinner)
 end
 
+local function show_settings(self)
+	show_spinner()
+	unload_all(self)
+	load(self, "#settings_proxy", hide_spinner)
+end
+
 local function show_game(self)
 	show_spinner()
 	unload_all(self)
@@ -72,10 +81,16 @@ local function hide_popup(self, message)
 end
 
 
+local function init_playfab()
+	playfab.init("6DE1")
+	util.flow_apis()
+end
+
 function init(self)
 	msg.post("@render:", "clear_color", { color = vmath.vector4(95 /256, 129 / 256, 161 / 256, 1 ) })
 	msg.post(".", "acquire_input_focus")
-	playfab.init("6DE1")
+	init_playfab()
+	
 	self.loaded_collections = {}
 	show_startmenu(self)
 end
@@ -94,6 +109,8 @@ function on_message(self, message_id, message, sender)
 		show_register(self)
 	elseif message_id == hash("show_startmenu") then
 		show_startmenu(self)
+	elseif message_id == hash("show_settings") then
+		show_settings(self)
 	elseif message_id == hash("show_popup") then
 		show_popup(self, message.text)
 	elseif message_id == hash("hide_popup") then
