@@ -1,10 +1,30 @@
 name: "game"
+instances {
+  id: "bat"
+  prototype: "/example/game/bat.go"
+  position {
+    x: 1.7222086
+    y: 72.50504
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
 collection_instances {
   id: "player"
   collection: "/example/game/player.collection"
   position {
-    x: 146.58127
-    y: 223.86958
+    x: 0.0
+    y: 34.48042
     z: 0.0
   }
   rotation {
@@ -25,6 +45,40 @@ embedded_instances {
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/example/game/game.script\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"batfactory\"\n"
+  "  type: \"factory\"\n"
+  "  data: \"prototype: \\\"/example/game/bat.go\\\"\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"coinfactory\"\n"
+  "  type: \"factory\"\n"
+  "  data: \"prototype: \\\"/example/game/coin.go\\\"\\n"
+  "\"\n"
   "  position {\n"
   "    x: 0.0\n"
   "    y: 0.0\n"
@@ -100,7 +154,7 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 0.0
+    x: -357.0362
     y: 0.0
     z: 0.0
   }

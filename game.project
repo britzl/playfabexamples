@@ -4,7 +4,7 @@ version = 0.1
 dependencies = https://github.com/britzl/playfab_api_defold/archive/master.zip,https://github.com/britzl/dirtylarry/archive/feature/hit.zip,https://github.com/britzl/ludobits/archive/master.zip
 
 [bootstrap]
-main_collection = /example/main.collectionc
+main_collection = /example/game/game.collectionc
 render = /example/pixel.renderc
 
 [input]

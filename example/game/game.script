@@ -1,3 +1,22 @@
+local flow = require "ludobits.m.flow"
+
 function init(self)
 	msg.post("@render:", "clear_color", { color = vmath.vector4(95 /256, 129 / 256, 161 / 256, 1 ) })
+	flow.start(function()
+		local delay = 5
+		while true do
+			local direction = math.random(1,2) == 1 and 1 or -1
+			factory.create("game:/game#batfactory", vmath.vector3((direction == 1) and -500 or 500, math.random(50, 110), 0), nil, { direction = direction })
+			flow.delay(delay)
+			delay = math.max(0.5, delay * 0.95)
+		end
+	end)
+end
+
+function update(self, dt)
+	flow.update()
+end
+
+function on_message(self, message_id, message, sender)
+	flow.on_message(message_id, message, sender)
 end

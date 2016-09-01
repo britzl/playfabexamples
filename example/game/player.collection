@@ -4,7 +4,7 @@ instances {
   prototype: "/ludobits/go/camera.go"
   position {
     x: -142.0
-    y: -80.0
+    y: -50.0
     z: 0.0
   }
   rotation {
@@ -49,7 +49,7 @@ embedded_instances {
   "group: \\\"player\\\"\\n"
   "mask: \\\"ground\\\"\\n"
   "mask: \\\"enemy\\\"\\n"
-  "mask: \\\"danger\\\"\\n"
+  "mask: \\\"coin\\\"\\n"
   "embedded_collision_shape {\\n"
   "  shapes {\\n"
   "    shape_type: TYPE_BOX\\n"
