@@ -1,0 +1,39 @@
+local leaderboard = require "example.playfab.leaderboard"
+local simple_input = require "ludobits.m.simple_input"
+local flow = require "ludobits.m.flow"
+local navigate = require "example.navigate"
+
+
+function init(self)
+	simple_input.acquire()
+
+	simple_input.register("back", navigate.startmenu)
+	
+	local s = ""
+	local entries = leaderboard.get()
+	for _,entry in ipairs(entries or {}) do
+		s = s .. ("#%d %s %d\n"):format(entry.Position, entry.DisplayName, entry.StatValue)
+	end
+	gui.set_text(gui.get_node("leaderboard"), s)
+end
+
+function final(self)
+	simple_input.release()
+end
+
+function on_input(self, action_id, action)
+	simple_input.on_input(action_id, action)
+end
+
+function on_message(self, message_id, message, sender)
+	flow.on_message(message_id, message, sender)
+end
+
+function update(self, dt)
+	flow.update()
+end
+
+function on_reload(self)
+    -- Add input-handling code here
+    -- Remove this function if not needed
+end

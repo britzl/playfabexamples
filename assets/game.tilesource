@@ -68,12 +68,12 @@ convex_hulls {
 convex_hulls {
   index: 72
   count: 9
-  collision_group: ""
+  collision_group: "death"
 }
 convex_hulls {
   index: 81
   count: 7
-  collision_group: ""
+  collision_group: "death"
 }
 convex_hulls {
   index: 88
@@ -218,7 +218,7 @@ convex_hulls {
 convex_hulls {
   index: 333
   count: 4
-  collision_group: ""
+  collision_group: "death"
 }
 convex_hulls {
   index: 337
@@ -4500,6 +4500,7 @@ convex_hulls {
   count: 0
   collision_group: ""
 }
+collision_groups: "death"
 collision_groups: "ground"
 animations {
   id: "bat"
@@ -4570,6 +4571,15 @@ animations {
   end_tile: 30
   playback: PLAYBACK_LOOP_FORWARD
   fps: 10
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "life"
+  start_tile: 364
+  end_tile: 364
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 30
   flip_horizontal: 0
   flip_vertical: 0
 }

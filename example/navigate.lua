@@ -22,6 +22,10 @@ function M.settings()
 	msg.post(M.CONTROLLER, "show_settings")
 end
 
+function M.leaderboard()
+	msg.post(M.CONTROLLER, "show_leaderboard")
+end
+
 function M.show_popup(text)
 	msg.post(M.CONTROLLER, "show_popup", { text = text })
 end

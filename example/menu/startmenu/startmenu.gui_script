@@ -1,9 +1,9 @@
-local playfab = require "playfab_defold.playfab"
+local clientapi = require "PlayFab.PlayFabClientApi"
 local dirtylarry = require "dirtylarry/dirtylarry"
 local navigate = require "example.navigate"
 
 local function is_authenticated()
-	return playfab.is_authenticated()
+	return clientapi.IsClientLoggedIn()
 end
 
 function init(self)

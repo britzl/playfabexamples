@@ -11,8 +11,10 @@ end
 local function set_avatar(avatar)
 	return function()
 		flow.start(function()
+			navigate.show_spinner()
 			user_data.set("avatar", avatar)
 			update_avatar()
+			navigate.hide_spinner()
 		end)
 	end
 end
@@ -34,6 +36,7 @@ end
 
 function final(self)
 	simple_input.release()
+	flow.stop(msg.url())
 end
 
 function on_input(self, action_id, action)

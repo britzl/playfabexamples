@@ -1,5 +1,3 @@
-local ZOOM = 4
-
 function init(self)
 	self.tile_pred = render.predicate({"tile"})
 	self.gui_pred = render.predicate({"gui"})
@@ -13,6 +11,7 @@ function init(self)
 	self.clear_color.w = sys.get_config("render.clear_color_alpha", 0)
 	
 	self.view = vmath.matrix4()
+	self.zoom = 4
 end
 
 function update(self)
@@ -20,7 +19,6 @@ function update(self)
 	render.set_depth_mask(true)
 	render.clear({[render.BUFFER_COLOR_BIT] = self.clear_color, [render.BUFFER_DEPTH_BIT] = 1, [render.BUFFER_STENCIL_BIT] = 0})
 
-	-- set render state
 	render.set_depth_mask(false)
 	render.disable_state(render.STATE_DEPTH_TEST)
 	render.disable_state(render.STATE_STENCIL_TEST)
@@ -28,6 +26,7 @@ function update(self)
 	render.set_blend_func(render.BLEND_SRC_ALPHA, render.BLEND_ONE_MINUS_SRC_ALPHA)
 	render.disable_state(render.STATE_CULL_FACE)
 
+	-------- sprites, spine, tilemaps etc
 	local x = 0
 	local y = 0
 	local width = render.get_window_width()
@@ -35,17 +34,16 @@ function update(self)
 	
 	render.set_viewport(x, y, width, height)
 	render.set_view(self.view)
-
-	render.set_projection(vmath.matrix4_orthographic(x, width / ZOOM, y, height / ZOOM, -1, 1))
-
-
+	render.set_projection(vmath.matrix4_orthographic(x, width / self.zoom, y, height / self.zoom, -10, 10))
 
 	render.draw(self.tile_pred)
 	render.draw(self.particle_pred)
 	render.draw_debug3d()
-	
+
+
+	-------- gui
 	render.set_view(vmath.matrix4())
-	render.set_projection(vmath.matrix4_orthographic(0, render.get_window_width(), 0, render.get_window_height(), -1, 1))
+	render.set_projection(vmath.matrix4_orthographic(0, render.get_window_width() / self.zoom, 0, render.get_window_height() / self.zoom, -10, 10))
 	
 	render.enable_state(render.STATE_STENCIL_TEST)
 	render.draw(self.gui_pred)
@@ -61,5 +59,7 @@ function on_message(self, message_id, message)
 		self.clear_color = message.color
 	elseif message_id == hash("set_view_projection") then
 		self.view = message.view
+	elseif message_id == hash("set_zoom") then
+		self.zoom = message.zoom or 1
 	end
 end

@@ -1,4 +1,7 @@
-local playfab = require "playfab_defold.playfab"
+local playfab = require "PlayFab.PlayFabClientApi"
+local IPlayFabHttps = require("PlayFab.IPlayFabHttps")
+local PlayFabHttps_Defold = require("PlayFab.PlayFabHttps_Defold")
+
 local util = require "example.playfab.util"
 local collection = require "ludobits.m.collection"
 
@@ -58,6 +61,12 @@ local function show_settings(self)
 	load(self, "#settings_proxy", hide_spinner)
 end
 
+local function show_leaderboard(self)
+	show_spinner()
+	unload_all(self)
+	load(self, "#leaderboard_proxy", hide_spinner)
+end
+
 local function show_game(self)
 	show_spinner()
 	unload_all(self)
@@ -73,7 +82,6 @@ local function show_popup(self, message)
 end
 
 local function hide_popup(self, message)
-	print("hide_popup")
 	show_spinner()
 	unload(self, "#popup_proxy", function()
 		hide_spinner()
@@ -82,11 +90,13 @@ end
 
 
 local function init_playfab()
-	playfab.init("6DE1")
+	playfab.settings.titleId = "6DE1"
+	IPlayFabHttps.SetHttp(PlayFabHttps_Defold)
 	util.flow_apis()
 end
 
 function init(self)
+	msg.post("@render:", "set_zoom", { zoom = 1 })
 	msg.post("@render:", "clear_color", { color = vmath.vector4(95 /256, 129 / 256, 161 / 256, 1 ) })
 	msg.post(".", "acquire_input_focus")
 	init_playfab()
@@ -111,6 +121,8 @@ function on_message(self, message_id, message, sender)
 		show_startmenu(self)
 	elseif message_id == hash("show_settings") then
 		show_settings(self)
+	elseif message_id == hash("show_leaderboard") then
+		show_leaderboard(self)
 	elseif message_id == hash("show_popup") then
 		show_popup(self, message.text)
 	elseif message_id == hash("hide_popup") then
