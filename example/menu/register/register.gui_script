@@ -1,13 +1,17 @@
-local playfab = require "PlayFab.PlayFabClientApi"
+local flow = require "ludobits.m.flow"
+local user_data = require "example.playfab.user_data"
+local leaderboard = require "example.playfab.leaderboard"
 local navigate = require "example.navigate"
-local simple_input = require "ludobits.m.simple_input"
+
+local client = require "PlayFab.PlayFabClientApi"
+
 local dirtylarry = require "dirtylarry/dirtylarry"
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
-	gui.set_text(gui.get_node("username/content"), "britzl")
-	gui.set_text(gui.get_node("password/content"), "qwerty")
-	gui.set_text(gui.get_node("email/content"), "bjorn.ritzl@king.com")
+	gui.set_text(gui.get_node("username/content"), "")
+	gui.set_text(gui.get_node("password/content"), "")
+	gui.set_text(gui.get_node("email/content"), "")
 	self.username = ""
 	self.password = ""
 	self.email = ""
@@ -15,35 +19,63 @@ end
 
 function final(self)
 	msg.post(".", "release_input_focus")
+	flow.stop(msg.url())
 end
 
+
 function on_input(self, action_id, action)
-	self.email = dirtylarry:input("email", action_id, action, gui.KEYBOARD_TYPE_EMAIL, "E-mail...")
 	self.username = dirtylarry:input("username", action_id, action, gui.KEYBOARD_TYPE_DEFAULT, "Username...")
 	self.password = dirtylarry:input("password", action_id, action, gui.KEYBOARD_TYPE_PASSWORD, "Password...")
+	self.email = dirtylarry:input("email", action_id, action, gui.KEYBOARD_TYPE_EMAIL, "E-mail...")
 	
 	dirtylarry:hit("back/back", action_id, action, navigate.startmenu)
 	dirtylarry:button("register", action_id, action, function ()
 		navigate.show_spinner()
-		local request = {
-			TitleId = playfab.settings.titleId,
-			Username = self.username,
-			Email = self.email,
-			Password = self.password,
-			RequireBothUsernameAndEmail = true,
-			DisplayName = self.username
-		}
-		local response, error = playfab.RegisterPlayFabUser.flow(request)
-		if error then
-			navigate.hide_spinner()
-			navigate.show_popup(error.errorMessage or "Something went wrong")
-		else
+		flow.start(function()
+			local request = {
+				Username = self.username,
+				Email = self.email,
+				Password = self.password
+			}
+			local response, error = client.RegisterPlayFabUser.flow(request)
+			print("test")
+			if error then
+				navigate.show_popup(error.errorMessage or "Something went wrong")
+				navigate.hide_spinner()
+				return
+			end
+			local playfab_id = response.PlayFabId
+			
+			-- refresh user_data
+			local response, error = user_data.on_login(playfab_id)
+			if error then
+				navigate.show_popup(error.errorMessage or "Something went wrong")
+				navigate.hide_spinner()
+				return
+			end
+			
+			-- refresh leaderboard
+			local response, error = leaderboard.on_login(playfab_id)
+			if error then
+				navigate.show_popup(error.errorMessage or "Something went wrong")
+				navigate.hide_spinner()
+				return
+			end
+			
 			navigate.hide_spinner()
 			navigate.startmenu()
-		end
+		end)
 	end)
 end
 
+function update(self, dt)
+	flow.update()
+end
+
+function on_message(self, message_id, message, sender)
+	flow.on_message(message_id, message, sender)
+end
+	
 function on_reload(self)
     -- Add input-handling code here
     -- Remove this function if not needed
