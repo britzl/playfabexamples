@@ -146,8 +146,8 @@ function on_input(self, action_id, action)
 		return
 	end
 
-	if action_id == JUMP then
-		if action.pressed then
+	if action_id == hash("jump") then
+		if action.pressed and (self.physics.is_falling() == false) then
 			msg.post("#jump_sound", "play_sound")
 			self.physics.jump(140, true)
 			play_jump_animation(self)
@@ -155,6 +155,15 @@ function on_input(self, action_id, action)
 			self.physics.abort_jump()
 		end
 	end
+		
+	if action_id == hash("cheat") then
+		increas_score(self, 100)
+	end
+	
+	if action_id == hash("kill") then
+		game_over(self)
+	end
+	
 end
 
 function on_reload(self)
