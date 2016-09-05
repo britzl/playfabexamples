@@ -11,8 +11,8 @@ local dirtylarry = require "dirtylarry/dirtylarry"
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
-	gui.set_text(gui.get_node("username/content"), "britzl")
-	gui.set_text(gui.get_node("password/content"), "qwerty")
+	gui.set_text(gui.get_node("username/content"), "")
+	gui.set_text(gui.get_node("password/content"), "")
 	self.username = ""
 	self.password = ""
 end
