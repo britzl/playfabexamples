@@ -14,6 +14,26 @@ key_trigger {
   input: KEY_BACKSPACE
   action: "backspace"
 }
+key_trigger {
+  input: KEY_W
+  action: "jump"
+}
+key_trigger {
+  input: KEY_A
+  action: "left"
+}
+key_trigger {
+  input: KEY_D
+  action: "right"
+}
+key_trigger {
+  input: KEY_S
+  action: "cheat"
+}
+key_trigger {
+  input: KEY_ESC
+  action: "kill"
+}
 mouse_trigger {
   input: MOUSE_BUTTON_1
   action: "touch"
