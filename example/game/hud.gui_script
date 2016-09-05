@@ -1,14 +1,16 @@
+local flow = require "ludobits.m.flow"
+
 local function update_hearts(self, amount)
 	while amount > #self.hearts do
-		local heart = gui.clone(self.heart_proto)
+		local heart = gui.clone(self.heart_proto_node)
 		gui.set_enabled(heart, true)
 		table.insert(self.hearts, heart)
 	end
 	while #self.hearts > amount do
 		gui.delete_node(table.remove(self.hearts))
 	end
-	local pos = gui.get_position(self.heart_proto)
-	local size = gui.get_size(self.heart_proto)
+	local pos = gui.get_position(self.heart_proto_node)
+	local size = gui.get_size(self.heart_proto_node)
 	for i=1,#self.hearts do
 		gui.set_position(self.hearts[i], pos)
 		pos.x = pos.x + size.x + 4
@@ -19,21 +21,45 @@ local function update_score(self, score)
 	gui.set_text(gui.get_node("score"), tostring(score or 0))
 end
 
+local function show_message(self, message)
+	print("show_message", message)
+	flow.start(function()
+		gui.set_enabled(self.message_node, true)
+		gui.set_text(self.message_node, message)
+		gui.set_color(self.message_node, vmath.vector4(1, 1, 1, 0))
+		flow.gui_animate(self.message_node, gui.PROP_COLOR, gui.PLAYBACK_ONCE_FORWARD, vmath.vector4(1, 1, 1, 1), gui.EASING_INCUBIC, 1)
+		flow.delay(2)
+		flow.gui_animate(self.message_node, gui.PROP_COLOR, gui.PLAYBACK_ONCE_FORWARD, vmath.vector4(1, 1, 1, 0), gui.EASING_INCUBIC, 1)
+	end)
+end
+
 
 function init(self)
 	self.hearts = {}
-	self.heart_proto = gui.get_node("heart_proto")
-	self.game_over = gui.get_node("game_over")
-	gui.set_enabled(self.heart_proto, false)
-	gui.set_enabled(self.game_over, false)
+	self.heart_proto_node = gui.get_node("heart_proto")
+	self.message_node = gui.get_node("message")
+	gui.set_enabled(self.heart_proto_node, false)
+	gui.set_enabled(self.message_node, false)
+end
+
+function final(self)
+	flow.stop()
+end
+
+function update(self, dt)
+	flow.update()
 end
 
 function on_message(self, message_id, message, sender)
+	print(message_id)
+	flow.on_message(message_id, message, sender)
 	if message_id == hash("update_health") then
 		update_hearts(self, message.health)
 	elseif message_id == hash("update_score") then
 		update_score(self, message.score)
+	elseif message_id == hash("show_message") then
+		show_message(self, message.text)
 	elseif message_id == hash("game_over") then
-		gui.set_enabled(self.game_over, true)
+		show_message(self, "GAME OVER")
 	end
 end

@@ -9,6 +9,7 @@ end
 function init(self)
 	msg.post("@render:", "set_zoom", { zoom = 4 })
 	msg.post("@render:", "clear_color", { color = vmath.vector4(95 /256, 129 / 256, 161 / 256, 1 ) })
+	msg.post("#hud", "show_message", { text = "WASD or arrows to move\nSPACE = jump" })
 	flow.start(function()
 		for i=1,4 do
 			create_bat(200)

@@ -16,6 +16,7 @@ local DEFAULT_COLOR = "pink"
 local function game_over(self)
 	self.game_over = true
 	flow.start(function()
+		msg.post("game:/game#hud", "game_over")
 		local response, error = leaderboard.update(self.score)
 		pprint(response)
 		pprint(error)

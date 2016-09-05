@@ -201,14 +201,14 @@ nodes {
     w: 1.0
   }
   scale {
-    x: 3.0
-    y: 3.0
+    x: 2.0
+    y: 2.0
     z: 1.0
     w: 1.0
   }
   size {
-    x: 200.0
-    y: 100.0
+    x: 90.0
+    y: 40.0
     z: 0.0
     w: 1.0
   }
@@ -222,7 +222,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "GAME OVER"
   font: "smallest_pixel-7"
-  id: "game_over"
+  id: "message"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
@@ -239,7 +239,7 @@ nodes {
     w: 1.0
   }
   adjust_mode: ADJUST_MODE_FIT
-  line_break: false
+  line_break: true
   layer: ""
   inherit_alpha: true
   clipping_mode: CLIPPING_MODE_NONE

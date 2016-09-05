@@ -3,6 +3,10 @@ fonts {
   name: "smallest_pixel-7"
   font: "/assets/font/smallest_pixel-7.font"
 }
+fonts {
+  name: "larryfont"
+  font: "/dirtylarry/larryfont.font"
+}
 textures {
   name: "dirtylarry"
   texture: "/dirtylarry/dirtylarry.atlas"
@@ -101,7 +105,7 @@ nodes {
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
   text: "SOME SMALL TEXT"
-  font: "smallest_pixel-7"
+  font: "larryfont"
   id: "text"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
