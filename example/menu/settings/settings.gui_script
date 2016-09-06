@@ -29,7 +29,7 @@ function init(self)
 	simple_input.register("pink_avatar", set_avatar("pink"))
 	simple_input.register("green_avatar", set_avatar("green"))
 	simple_input.register("blue_avatar", set_avatar("blue"))
-	simple_input.register("back", navigate.startmenu)
+	simple_input.register("back/button", navigate.startmenu)
 
 	update_avatar()
 end

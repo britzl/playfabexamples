@@ -1,11 +1,12 @@
+local flow = require "ludobits.m.flow"
 local playfab = require "PlayFab.PlayFabClientApi"
 local IPlayFabHttps = require("PlayFab.IPlayFabHttps")
 local PlayFabHttps_Defold = require("PlayFab.PlayFabHttps_Defold")
 
 local util = require "example.playfab.util"
-local collection = require "ludobits.m.collection"
-
-
+local authentication = require "example.playfab.authentication"
+local user_data = require "example.playfab.user_data"
+local leaderboard = require "example.playfab.leaderboard"
 
 local function show_spinner()
 	msg.post("main:/spinner#spinner", "show")
@@ -16,74 +17,95 @@ local function hide_spinner()
 end
 
 local function unload_all(self)
-	for c,_ in pairs(self.loaded_collections) do
-		self.loaded_collections[c] = nil
-		collection.unload(c)
+	for proxy,_ in pairs(self.loaded_collections) do
+		self.loaded_collections[proxy] = nil
+		flow.unload(proxy)
 	end
 end
 
-local function unload(self, proxy, callback)
+local function unload(self, proxy)
 	if self.loaded_collections[proxy] then
 		self.loaded_collections[proxy] = nil
-		collection.unload(proxy, callback)
+		flow.unload(proxy)
 	end
 end
 
-local function load(self, proxy, callback)
+local function load(self, proxy)
 	if self.loaded_collections[proxy] then
 		return
 	end
 	self.loaded_collections[proxy] = true
-	collection.load(proxy, callback)
-end
-
-local function show_startmenu(self)
-	show_spinner()
-	unload_all(self)
-	load(self, "#startmenu_proxy", hide_spinner)
-end
-
-local function show_login(self)
-	show_spinner()
-	unload_all(self)
-	load(self, "#login_proxy", hide_spinner)
-end
-
-local function show_register(self)
-	show_spinner()
-	unload_all(self)
-	load(self, "#register_proxy", hide_spinner)
-end
-
-local function show_settings(self)
-	show_spinner()
-	unload_all(self)
-	load(self, "#settings_proxy", hide_spinner)
-end
-
-local function show_leaderboard(self)
-	show_spinner()
-	unload_all(self)
-	load(self, "#leaderboard_proxy", hide_spinner)
-end
-
-local function show_game(self)
-	show_spinner()
-	unload_all(self)
-	load(self, "#game_proxy", hide_spinner)
+	flow.load(proxy)
 end
 
 local function show_popup(self, message)
-	show_spinner()
-	load(self, "#popup_proxy", function()
+	flow(function()
+		show_spinner()
+		load(self, "#popup_proxy")
 		hide_spinner()
 		msg.post("popup:/popup", "show", { text = message })
 	end)
 end
 
 local function hide_popup(self, message)
-	show_spinner()
-	unload(self, "#popup_proxy", function()
+	flow(function()
+		show_spinner()
+		unload(self, "#popup_proxy")
+		hide_spinner()
+	end)
+end
+
+local function show_startmenu(self, no_spinner)
+	flow(function()
+		if not no_spinner then show_spinner() end
+		unload_all(self)
+		load(self, "#startmenu_proxy")
+		if not no_spinner then hide_spinner() end
+	end)
+end
+
+local function show_login(self, message)
+	flow.start(function()
+		show_spinner()
+		unload_all(self)
+		load(self, "#login_proxy")
+		if message then show_popup(self, message) end
+		hide_spinner()
+	end)
+end
+
+local function show_register(self)
+	flow(function()
+		show_spinner()
+		unload_all(self)
+		load(self, "#register_proxy")
+		hide_spinner()
+	end)
+end
+
+local function show_settings(self)
+	flow(function()
+		show_spinner()
+		unload_all(self)
+		load(self, "#settings_proxy")
+		hide_spinner()
+	end)
+end
+
+local function show_leaderboard(self)
+	flow(function()
+		show_spinner()
+		unload_all(self)
+		load(self, "#leaderboard_proxy")
+		hide_spinner()
+	end)
+end
+
+local function show_game(self)
+	flow(function()
+		show_spinner()
+		unload_all(self)
+		load(self, "#game_proxy")
 		hide_spinner()
 	end)
 end
@@ -96,25 +118,47 @@ local function init_playfab()
 end
 
 function init(self)
+	math.randomseed(os.time())
 	msg.post("@render:", "set_zoom", { zoom = 1 })
 	msg.post("@render:", "clear_color", { color = vmath.vector4(95 /256, 129 / 256, 161 / 256, 1 ) })
 	msg.post(".", "acquire_input_focus")
 	init_playfab()
 	
 	self.loaded_collections = {}
-	show_startmenu(self)
+	
+	flow(function()
+		show_startmenu(self, true)
+		show_spinner(self)
+		authentication.listeners.add( { [authentication.LOGIN_SUCCESS] = user_data.refresh })
+		authentication.listeners.add( { [authentication.LOGIN_FAILED] = user_data.clear })
+		authentication.listeners.add( { [authentication.LOGOUT_SUCCESS] = user_data.clear })
+
+		authentication.listeners.add( { [authentication.LOGIN_SUCCESS] = leaderboard.refresh })
+		authentication.listeners.add( { [authentication.LOGIN_FAILED] = leaderboard.clear })
+		authentication.listeners.add( { [authentication.LOGOUT_SUCCESS] = leaderboard.clear })
+		authentication.login()
+		hide_spinner(self)
+	end)
 end
 
 function final(self)
 	msg.post(".", "release_input_focus")
+	authentication.listeners.remove(user_data.refresh)
+	authentication.listeners.remove(user_data.clear)
+	authentication.listeners.remove(leaderboard.refresh)
+	authentication.listeners.remove(leaderboard.clear)
+end
+
+function update(self, dt)
+	flow.update()
 end
 
 function on_message(self, message_id, message, sender)
-	collection.on_message(message_id, message, sender)
+	flow.on_message(message_id, message, sender)
 	if message_id == hash("show_game") then
 		show_game(self)
 	elseif message_id == hash("show_login") then
-		show_login(self)
+		show_login(self, message.text)
 	elseif message_id == hash("show_register") then
 		show_register(self)
 	elseif message_id == hash("show_startmenu") then

@@ -1,42 +1,49 @@
 --- This module keeps track of a PlayFab leaderboard
 
 local client = require "PlayFab.PlayFabClientApi"
+local authentication = require "example.playfab.authentication"
+local listener = require "ludobits.m.listener"
 
-local M = {}
+
+local M = {
+	listeners = listener.create()
+}
+
+--- Will be triggered when the leaderboard has refreshed
+M.REFRESH_SUCCESS = hash("LEADERBOARD_REFRESH_SUCCESS")
+
+--- Will be trigegred if the leaderboard failed to refresh
+M.REFRESH_FAILED = hash("LEADERBOARD_REFRESH_FAILED")
 
 M.leaderboard = {}
-
-M.playfab_id = nil
 
 local function get_for_player()
 	local request = {
 		StatisticName = "score"
 	}
-	local response, error = client.GetLeaderboardAroundPlayer.flow(request)
-	if error then
-		return false, error
-	else
-		M.leaderboard = response.Leaderboard
-		return true, error
-	end
+	local response, error = client.GetLeaderboardAroundPlayer(
+		request,
+		function(response)
+			M.leaderboard = response.Leaderboard
+			M.listeners.trigger(M.REFRESH_SUCCESS, M.leaderboard)
+		end,
+		function(error)
+			M.listeners.trigger(M.REFRESH_FAILED, error)
+		end)
 end
 
---- Should be called when the user has logged in.
--- The function will get the leaderboard for the currently
--- logged in player
--- @param playfab_id
--- @return success
--- @return error 
-function M.on_login(playfab_id)
-	M.playfab_id = playfab_id
-	return get_for_player()
+
+--- Refresh the leaderboard for the currently logged in player
+-- Will generate a @{REFRESH_SUCCESS} or @{REFRESH_FAILED}
+function M.refresh()
+	get_for_player()
 end
 
---- Call this function when the user logs out
--- Will clear the current leaderboard
-function M.on_logout()
+
+--- Clear the current leaderboard
+function M.clear()
 	M.leaderboard = {}
-	M.playfab_id = nil
+	M.listeners.trigger(M.REFRESH_SUCCESS, M.leaderboard)
 end
 
 
@@ -51,12 +58,18 @@ function M.get_score(playfab_id)
 	end
 end
 
+
 --- Update the score for the currently logged in user
 -- @param score
 -- @return success
 -- @return error
 function M.update(score)
-	local current_score = M.get_score(M.playfab_id)
+	local user_id = authentication.user_id()
+	if not user_id then
+		return false, "No user id"
+	end
+	
+	local current_score = M.get_score(user_id)
 	if current_score > score then
 		return true
 	end

@@ -10,8 +10,8 @@ function M.game()
 	msg.post(M.CONTROLLER, "show_game")
 end
 
-function M.login()
-	msg.post(M.CONTROLLER, "show_login")
+function M.login(message)
+	msg.post(M.CONTROLLER, "show_login", { text = message })
 end
 
 function M.register()

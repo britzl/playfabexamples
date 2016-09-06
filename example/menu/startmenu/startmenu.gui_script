@@ -1,40 +1,99 @@
-local clientapi = require "PlayFab.PlayFabClientApi"
+local authentication = require "example.playfab.authentication"
+local playfab = require "PlayFab.PlayFabClientApi"
 local dirtylarry = require "dirtylarry/dirtylarry"
 local navigate = require "example.navigate"
+local flow = require "ludobits.m.flow"
 
 local function is_authenticated()
-	return clientapi.IsClientLoggedIn()
+	return playfab.IsClientLoggedIn()
+end
+
+local function update_account_info(self)
+	if not is_authenticated() then
+		gui.set_text(gui.get_node("account_info"), "Not logged in")
+	else
+		local user_id = authentication.user_id()
+		local username = authentication.username() or "anonymous"
+		gui.set_text(gui.get_node("account_info"), ("Logged in as %s (%s)"):format(username, user_id))
+	end
+end
+
+
+local function update_button_visibility(self)	
+	local buttons = {}
+	local function update_button(node, visible)
+		gui.set_enabled(node, visible)
+		if visible then table.insert(buttons, node) end
+	end
+
+	update_button(self.play, is_authenticated())
+	update_button(self.leaderboard, is_authenticated())
+	update_button(self.settings, is_authenticated())
+	update_button(self.register, is_authenticated() and not authentication.has_username_and_password())
+	update_button(self.logout, is_authenticated() and authentication.has_username_and_password())
+	
+	local height = 88
+	local spacing = 10
+	local y = 320 + (height + spacing) / 2 + #buttons * (height + spacing) / 2
+	for i=1,#buttons do
+		local pos = gui.get_position(buttons[i])
+		pos.y = y - i * (height + spacing)
+		gui.set_position(buttons[i], pos)
+	end
 end
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
-	gui.set_enabled(gui.get_node("login/larrybutton"), not is_authenticated())
-	gui.set_enabled(gui.get_node("register/larrybutton"), not is_authenticated())
-	gui.set_enabled(gui.get_node("play/larrybutton"), is_authenticated())
-	gui.set_enabled(gui.get_node("settings/larrybutton"), is_authenticated())
-	gui.set_enabled(gui.get_node("leaderboard/larrybutton"), is_authenticated())
+	self.play = gui.get_node("play/larrybutton")
+	self.settings = gui.get_node("settings/larrybutton")
+	self.leaderboard = gui.get_node("leaderboard/larrybutton")
+	self.register = gui.get_node("register/larrybutton")
+	self.logout = gui.get_node("logout/larrybutton")
+
+	update_button_visibility(self)
+	update_account_info(self)
+	authentication.listeners.add()
 end
 
 function final(self)
 	msg.post(".", "release_input_focus")
+	authentication.listeners.remove()
+end
+
+function update(self, dt)
+	flow.update()
 end
 
 function on_input(self, action_id, action)
-	dirtylarry:button("play", action_id, action, function ()
+	dirtylarry:button("play", action_id, action, function()
 		navigate.game()
 	end)
-	dirtylarry:button("settings", action_id, action, function ()
+	dirtylarry:button("settings", action_id, action, function()
 		navigate.settings()
 	end)
-	dirtylarry:button("login", action_id, action, function ()
-		navigate.login()
-	end)
-	dirtylarry:button("register", action_id, action, function ()
+	dirtylarry:button("register", action_id, action, function()
 		navigate.register()
 	end)
-	dirtylarry:button("leaderboard", action_id, action, function ()
+	dirtylarry:button("leaderboard", action_id, action, function()
 		navigate.leaderboard()
 	end)
+	dirtylarry:button("logout", action_id, action, function()
+		flow(authentication.logout)
+	end)
+end
+
+function on_message(self, message_id, message, sender)
+	flow.on_message(message_id, message, sender)
+	if message_id == authentication.LOGIN_SUCCESS then
+		update_button_visibility(self)
+		update_account_info(self)
+		navigate.hide_spinner()
+	elseif message_id == authentication.LOGIN_FAILED then
+		update_button_visibility(self)
+		update_account_info(self)
+		navigate.hide_spinner()
+		navigate.show_popup("Unable to login")
+	end
 end
 
 function on_reload(self)
