@@ -45,9 +45,6 @@ function on_input(self, action_id, action)
 	dirtylarry:hit("back/button", action_id, action, navigate.startmenu)
 	dirtylarry:button("register", action_id, action, function ()
 		navigate.show_spinner()
-		self.username = "britzl" .. tostring(math.random(1000,9999))
-		self.password = "qwerty"
-		self.email = "bjorn.ritzl" .. tostring(math.random(1000,9999)) .. "@king.com"
 		flow(function()
 			local response, error = authentication.register(self.username, self.password, self.email)
 			if error then
