@@ -44,7 +44,7 @@ The example uses the [PlayFab Lua SDK for Defold](https://github.com/PlayFab/Lua
 The project makes heavy use of a couple of different utility functions to make the code a bit cleaner:
 
 * [flow.lua](https://github.com/britzl/ludobits/blob/master/ludobits/m/flow.lua) - Run code in a coroutine and untangle nested callbacks into neat looking synchronous code.
-* [listener.lua](https://github.com/britzl/ludobits/blob/master/ludobits/m/listener.lua) - Notify listeners either via Defold message passing or direct function calls when authentication, user data or leaderboard data changes.
+* [listener.lua](https://github.com/britzl/ludobits/blob/master/ludobits/m/listener.lua) - Notify listeners either via Defold message passing or direct function calls. Used to notify when authentication, user data or leaderboard data changes.
 * [Dirty Larry](https://github.com/andsve/dirtylarry) - This is a UI library which simplifies the creation of buttons, input fields and checkbox. It's perfect or sample apps such as this.
 
 # Project dependencies
