@@ -18,8 +18,14 @@ The example shows both how to register and login with a PlayFab account
 ![Login](https://github.com/britzl/playfab_example/raw/master/docs/login.png)
 Login with e-mail and password.
 
+![Register](https://github.com/britzl/playfab_example/raw/master/docs/register.png)
+Register with e-mail, username and password.
+
 ![Settings](https://github.com/britzl/playfab_example/raw/master/docs/settings.png)
 Change player character and store it using PlayFab user-data
+
+![Leaderboard](https://github.com/britzl/playfab_example/raw/master/docs/leaderboard.png)
+Show leaderboard using PlayFab player statistics
 
 ![Game](https://github.com/britzl/playfab_example/raw/master/docs/game.png)
 The game itself.
