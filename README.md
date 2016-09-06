@@ -35,7 +35,7 @@ The game itself challenges the player to survive an incoming swarm of nasty bats
 ![Game](https://github.com/britzl/playfab_example/raw/master/docs/game.png)
 
 # Implementation details
-The example uses the [PlayFab Lua SDK for Defold](https://github.com/PlayFab/LuaSdk)). The example uses a couple of different Lua modules to keep track of additional state:
+The example uses the [PlayFab Lua SDK for Defold](https://github.com/PlayFab/LuaSdk)). The main parts of the PlayFab SKD integration can be found in the following three Lua modules:
 
 * [authenticate.lua](https://github.com/britzl/playfab_example/blob/master/example/playfab/authentication.lua) - Keeps track of stored authentication credentials and does the actual call to the PlayFab SDK to either authenticate or register.
 * [user_data.lua](https://github.com/britzl/playfab_example/blob/master/example/playfab/user_data.lua) - Get and set user data using the PlayFab SDK
