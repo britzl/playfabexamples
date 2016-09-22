@@ -45,7 +45,7 @@ The project makes heavy use of a couple of different utility functions to make t
 
 * [flow.lua](https://github.com/britzl/ludobits/blob/master/ludobits/m/flow.lua) - Run code in a coroutine and untangle nested callbacks into neat looking synchronous code.
 * [listener.lua](https://github.com/britzl/ludobits/blob/master/ludobits/m/listener.lua) - Notify listeners either via Defold message passing or direct function calls. Used to send notifications when authentication, user data or leaderboard data changes.
-* [Dirty Larry](https://github.com/andsve/dirtylarry) - This is a UI library which simplifies the creation of buttons, input fields and checkbox. It's perfect or sample apps such as this.
+* [Dirty Larry](https://github.com/andsve/dirtylarry) - This is a UI library which simplifies the creation of buttons, input fields and checkbox. It's perfect for sample apps such as this.
 
 # Project dependencies
 This project is built using the following Defold library projects:
@@ -55,7 +55,7 @@ This project is built using the following Defold library projects:
 * [Ludobits](https://github.com/britzl/ludobits) - Utilities for game development
 
 # Try it!
-https://britzl.github.io/playfab_example/
+https://britzl.github.io/playfabexamples/
 
 # Credits
 Art by [Kenney](http://www.kenney.nl)
