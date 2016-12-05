@@ -69,7 +69,7 @@ function M.update(score)
 		return false, "No user id"
 	end
 	
-	local current_score = M.get_score(user_id)
+	local current_score = M.get_score(user_id) or 0
 	if current_score > score then
 		return true
 	end
