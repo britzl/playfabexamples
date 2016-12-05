@@ -61,7 +61,7 @@ function final(self)
 end
 
 function update(self, dt)
-	flow.update()
+	flow.update(dt)
 end
 
 function on_input(self, action_id, action)

@@ -91,7 +91,7 @@ function final(self)
 end
 
 function update(self, dt)
-	flow.update()
+	flow.update(dt)
 	if self.game_over then
 		return
 	end
