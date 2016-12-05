@@ -8,6 +8,17 @@ local authentication = require "example.playfab.authentication"
 local user_data = require "example.playfab.user_data"
 local leaderboard = require "example.playfab.leaderboard"
 
+-- Uncomment this to debug http requests
+--[[local http_request = http.request
+http.request = function(url, method, callback, headers, post_data, options)
+	print(url)
+	pprint(post_data)
+	http_request(url, method, function(self, id, response)
+		pprint(response)
+		callback(self, id, response)
+	end, headers, post_data, options)
+end--]]
+
 local function show_spinner()
 	msg.post("main:/spinner#spinner", "show")
 end
