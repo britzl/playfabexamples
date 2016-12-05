@@ -11,7 +11,7 @@ local function refresh_leaderboard(self)
 		s = s .. "No scores yet"
 	else
 		for _,entry in ipairs(entries or {}) do
-			s = s .. ("#%d %s %d\n"):format(1 + entry.Position, entry.DisplayName, entry.StatValue)
+			s = s .. ("#%d %s %d\n"):format(1 + entry.Position, entry.DisplayName or ("Unknown (" .. entry.PlayFabId:sub(10) .. ")"), entry.StatValue)
 		end
 	end
 	gui.set_text(gui.get_node("leaderboard"), s)
