@@ -1,7 +1,7 @@
 [project]
 title = PlayFab API Examples
 version = 0.1
-dependencies = https://api.playfab.com/sdks/download/defold,https://github.com/andsve/dirtylarry/archive/master.zip,https://github.com/britzl/ludobits/archive/0.8.3.zip
+dependencies = https://api.playfab.com/sdks/download/defold,https://github.com/andsve/dirtylarry/archive/master.zip,https://github.com/britzl/ludobits/archive/0.9.zip
 
 [bootstrap]
 main_collection = /example/main.collectionc
