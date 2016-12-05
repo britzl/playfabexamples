@@ -22,12 +22,12 @@ end
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
-	gui.set_text(gui.get_node("username/content"), "")
-	gui.set_text(gui.get_node("password/content"), "")
-	gui.set_text(gui.get_node("email/content"), "")
 	self.username = ""
 	self.password = ""
 	self.email = ""
+	gui.set_text(gui.get_node("username/content"), self.username)
+	gui.set_text(gui.get_node("password/content"), self.password)
+	gui.set_text(gui.get_node("email/content"), self.email)
 	validate(self)
 end
 

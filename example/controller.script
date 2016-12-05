@@ -54,6 +54,7 @@ local function show_popup(self, message)
 		show_spinner()
 		load(self, "#popup_proxy")
 		hide_spinner()
+		flow.frames(1)
 		msg.post("popup:/popup", "show", { text = message })
 	end)
 end
