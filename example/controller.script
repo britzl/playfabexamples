@@ -141,13 +141,7 @@ function init(self)
 	flow(function()
 		show_startmenu(self, true)
 		show_spinner(self)
-		authentication.listeners.add( { [authentication.LOGIN_SUCCESS] = user_data.refresh })
-		authentication.listeners.add( { [authentication.LOGIN_FAILED] = user_data.clear })
-		authentication.listeners.add( { [authentication.LOGOUT_SUCCESS] = user_data.clear })
-
-		authentication.listeners.add( { [authentication.LOGIN_SUCCESS] = leaderboard.refresh })
-		authentication.listeners.add( { [authentication.LOGIN_FAILED] = leaderboard.clear })
-		authentication.listeners.add( { [authentication.LOGOUT_SUCCESS] = leaderboard.clear })
+		authentication.listeners.add(msg.url())
 		authentication.login()
 		hide_spinner(self)
 	end)
@@ -155,10 +149,7 @@ end
 
 function final(self)
 	msg.post(".", "release_input_focus")
-	authentication.listeners.remove(user_data.refresh)
-	authentication.listeners.remove(user_data.clear)
-	authentication.listeners.remove(leaderboard.refresh)
-	authentication.listeners.remove(leaderboard.clear)
+	authentication.listeners.remove(msg.url())
 end
 
 function update(self, dt)
@@ -167,7 +158,16 @@ end
 
 function on_message(self, message_id, message, sender)
 	flow.on_message(message_id, message, sender)
-	if message_id == hash("show_game") then
+	if message_id == authentication.LOGIN_SUCCESS then
+		user_data.refresh()
+		leaderboard.refresh()
+	elseif message_id == authentication.LOGIN_FAILED then
+		user_data.clear()
+		leaderboard.clear()
+	elseif message_id == authentication.LOGOUT_SUCCESS then
+		user_data.clear()
+		leaderboard.clear()
+	elseif message_id == hash("show_game") then
 		show_game(self)
 	elseif message_id == hash("show_login") then
 		show_login(self, message.text)

@@ -52,7 +52,7 @@ function init(self)
 
 	update_button_visibility(self)
 	update_account_info(self)
-	authentication.listeners.add()
+	authentication.listeners.add(msg.url())
 end
 
 function final(self)

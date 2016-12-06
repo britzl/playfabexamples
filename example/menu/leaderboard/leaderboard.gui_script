@@ -21,7 +21,7 @@ function init(self)
 	simple_input.acquire()
 	simple_input.register("back/button", navigate.startmenu)
 
-	leaderboard.listeners.add()
+	leaderboard.listeners.add(msg.url())
 	refresh_leaderboard(self)
 end
 
