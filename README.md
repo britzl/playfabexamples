@@ -53,6 +53,9 @@ This project is built using the following Defold library projects:
 * [PlayFab Lua SDK](https://github.com/PlayFab/LuaSdk) - The official Lua SDK for PlayFab
 * [Dirty Larry](https://github.com/andsve/dirtylarry) - Quick and dirty GUI library
 * [Ludobits](https://github.com/britzl/ludobits) - Utilities for game development
+* [Platypus](https://github.com/britzl/platypus) - Platformer engine
+* [Orthographic](https://github.com/britzl/defold-orthographic) - Orthographic camera
+* [Input](https://github.com/britzl/defold-input) - Library for various input handling methods (state, buttons, mapping etc)
 
 # Try it!
 https://britzl.github.io/playfabexamples/
