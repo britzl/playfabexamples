@@ -3,7 +3,7 @@
 -- using a stored username and password
 
 local playfab = require "PlayFab.PlayFabClientApi"
-local savefile = require "ludobits.m.savefile"
+local savetable = require "ludobits.m.io.savetable"
 local listener = require "ludobits.m.listener"
 
 local M = {
@@ -42,7 +42,7 @@ end
 --- Check if username and password was used when authenticating the user
 -- @return true if username and password was used
 function M.has_username_and_password()
-	local auth = savefile.open("auth").load()
+	local auth = savetable.open("auth").load()
 	return auth.username and auth.password
 end
 
@@ -50,12 +50,12 @@ end
 --- Get the user id of the currently logged in player
 -- @return User id
 function M.user_id()
-	local auth = savefile.open("auth").load()
+	local auth = savetable.open("auth").load()
 	return auth and auth.response and auth.response.PlayFabId
 end
 
 function M.username()
-	local auth = savefile.open("auth").load()
+	local auth = savetable.open("auth").load()
 	return auth.username
 end
 
@@ -73,7 +73,7 @@ end
 -- @param username Optional username
 -- @param password Optional password
 function M.login(username, password)
-	local auth = savefile.open("auth").load()
+	local auth = savetable.open("auth").load() or {}
 	auth.username = username or auth.username
 	auth.password = password or auth.password
 	if auth.username and auth.password then
@@ -91,7 +91,7 @@ function M.login(username, password)
 			auth.response = response
 			M.listeners.trigger(M.LOGIN_SUCCESS, response)
 		end
-		savefile.open("auth").save(auth)
+		savetable.open("auth").save(auth)
 		return response, error
 	else
 		auth.id = auth.id or generate_id()
@@ -108,7 +108,7 @@ function M.login(username, password)
 			auth.response = response
 			M.listeners.trigger(M.LOGIN_SUCCESS, response)
 		end
-		savefile.open("auth").save(auth)
+		savetable.open("auth").save(auth)
 		return response, error
 	end
 end
@@ -117,7 +117,7 @@ end
 --- Logout
 -- This will clear any stored credentials
 function M.logout()
-	savefile.open("auth").save({})
+	savetable.open("auth").save({})
 	M.listeners.trigger(M.LOGOUT_SUCCESS, response)
 	M.login()
 end
@@ -128,7 +128,7 @@ function M.register(username, password, email)
 	if M.has_username_and_password() then
 		return false, "The current account already has a username and password"
 	end
-	local auth = savefile.open("auth").load()
+	local auth = savetable.open("auth").load()
 	local request = {
 		Username = username,
 		Email = email,
@@ -144,7 +144,7 @@ function M.register(username, password, email)
 		pprint(response)
 		auth.username = username
 		auth.password = password
-		savefile.open("auth").save(auth)
+		savetable.open("auth").save(auth)
 		M.listeners.trigger(M.REGISTRATION_SUCCESS, response)
 	end
 	return response, error

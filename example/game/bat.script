@@ -1,39 +1,21 @@
 go.property("direction", 1)
 
-local platformer = require "ludobits.m.platformer"
-
 function init(self)
-	self.physics = platformer.create()
+	local pos = go.get_position()
+	local to = pos + vmath.vector3(1000, 0, 0) * self.direction
+	go.animate(".", "position", go.PLAYBACK_ONCE_FORWARD, to, go.EASING_LINEAR, 1000 / 50, 0, function()
+		go.delete()
+	end)
 	sprite.set_hflip("#sprite", self.direction > 0)
 end
 
-function update(self, dt)
-	if self.dying then
-		self.dying = self.dying - dt
-		if self.dying <= 0 then
-			go.delete()
-		end
-	else
-		self.physics.move(vmath.vector3(50 * self.direction, 0, 0))
-		self.physics.update(dt)
-		local pos = go.get_position()
-		if pos.x < -1000 or pos.x > 1000 then
-			go.delete()
-		end
-	end
-	
-end
-
 function on_message(self, message_id, message, sender)
-	self.physics.on_message(message_id, message, sender)
 	if message_id == hash("die") then
 		msg.post("#die_sound", "play_sound")
 		msg.post("#playercollision", "disable")
-		self.dying = 0.1
+		go.cancel_animations(".", "position.x")
+		timer.delay(0.1, false, function()
+			go.delete()
+		end)
 	end
-end
-
-function on_reload(self)
-    -- Add reload-handling code here
-    -- Remove this function if not needed
 end

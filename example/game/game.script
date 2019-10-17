@@ -29,10 +29,6 @@ function final(self)
 	msg.post("@render:", "set_zoom", { zoom = 1 })
 end
 
-function update(self, dt)
-	flow.update(dt)
-end
-
 function on_message(self, message_id, message, sender)
 	flow.on_message(message_id, message, sender)
 end

@@ -1,11 +1,11 @@
 [project]
 title = PlayFab API Examples
 version = 0.1
-dependencies = https://api.playfab.com/sdks/download/defold,https://github.com/andsve/dirtylarry/archive/master.zip,https://github.com/britzl/ludobits/archive/0.9.zip
+dependencies = https://api.playfab.com/sdks/download/defold,https://github.com/andsve/dirtylarry/archive/master.zip,https://github.com/britzl/ludobits/archive/6.7.1.zip,https://github.com/britzl/platypus/archive/3.5.0.zip,https://github.com/britzl/defold-orthographic/archive/2.9.2.zip,https://github.com/britzl/defold-input/archive/2.4.1.zip
 
 [bootstrap]
 main_collection = /example/main.collectionc
-render = /example/pixel.renderc
+render = /orthographic/render/orthographic.renderc
 
 [input]
 game_binding = /input/game.input_bindingc

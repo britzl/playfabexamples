@@ -1,5 +1,5 @@
 local leaderboard = require "example.playfab.leaderboard"
-local simple_input = require "ludobits.m.simple_input"
+local button = require "in.button"
 local flow = require "ludobits.m.flow"
 local navigate = require "example.navigate"
 
@@ -18,20 +18,20 @@ local function refresh_leaderboard(self)
 end
 
 function init(self)
-	simple_input.acquire()
-	simple_input.register("back/button", navigate.startmenu)
+	button.acquire()
+	button.register("back/button", navigate.startmenu)
 
 	leaderboard.listeners.add(msg.url())
 	refresh_leaderboard(self)
 end
 
 function final(self)
-	simple_input.release()
+	button.release()
 	leaderboard.listeners.remove()
 end
 
 function on_input(self, action_id, action)
-	simple_input.on_input(action_id, action)
+	button.on_input(action_id, action)
 end
 
 function on_message(self, message_id, message, sender)
@@ -39,13 +39,4 @@ function on_message(self, message_id, message, sender)
 	if message_id == leaderboard.REFRESH_SUCCESS then
 		refresh_leaderboard(self)
 	end
-end
-
-function update(self, dt)
-	flow.update(dt)
-end
-
-function on_reload(self)
-    -- Add input-handling code here
-    -- Remove this function if not needed
 end

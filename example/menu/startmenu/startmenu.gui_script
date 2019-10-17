@@ -60,10 +60,6 @@ function final(self)
 	authentication.listeners.remove()
 end
 
-function update(self, dt)
-	flow.update(dt)
-end
-
 function on_input(self, action_id, action)
 	dirtylarry:button("play", action_id, action, function()
 		navigate.game()

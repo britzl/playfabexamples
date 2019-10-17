@@ -1,5 +1,5 @@
 local user_data = require "example.playfab.user_data"
-local simple_input = require "ludobits.m.simple_input"
+local button = require "in.button"
 local flow = require "ludobits.m.flow"
 local navigate = require "example.navigate"
 
@@ -21,34 +21,30 @@ end
 
 
 function init(self)
-	simple_input.acquire()
+	button.acquire()
 	self.pink = gui.get_node("pink_avatar")
 	self.blue = gui.get_node("blue_avatar")
 	self.green = gui.get_node("green_avatar")
 	
-	simple_input.register("pink_avatar", set_avatar("pink"))
-	simple_input.register("green_avatar", set_avatar("green"))
-	simple_input.register("blue_avatar", set_avatar("blue"))
-	simple_input.register("back/button", navigate.startmenu)
+	button.register("pink_avatar", set_avatar("pink"))
+	button.register("green_avatar", set_avatar("green"))
+	button.register("blue_avatar", set_avatar("blue"))
+	button.register("back/button", navigate.startmenu)
 
 	update_avatar()
 end
 
 function final(self)
-	simple_input.release()
+	button.release()
 	flow.stop(msg.url())
 end
 
 function on_input(self, action_id, action)
-	simple_input.on_input(action_id, action)
+	button.on_input(action_id, action)
 end
 
 function on_message(self, message_id, message, sender)
 	flow.on_message(message_id, message, sender)
-end
-
-function update(self, dt)
-	flow.update(dt)
 end
 
 function on_reload(self)
