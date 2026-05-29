@@ -16,7 +16,7 @@ function on_message(self, message_id, message, sender)
 		msg.post(".", "release_input_focus")
 		gui.set_enabled(self.spinner_node, false)
 		gui.set_enabled(self.bg_node, false)
-		gui.cancel_animation(self.spinner_node, "rotation.z")
+		gui.cancel_animations(self.spinner_node, "rotation.z")
 	end
 end
 
